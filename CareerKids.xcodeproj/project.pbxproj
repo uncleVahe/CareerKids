@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		321FD18E2EF5BDCC003ADA5E /* CareerKids.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CareerKids.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32168FA42F0BF7550057ABBD /* CareerKids.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CareerKids.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,8 @@
 			isa = PBXGroup;
 			children = (
 				321FD1902EF5BDCC003ADA5E /* CareerKids */,
-				321FD18F2EF5BDCC003ADA5E /* Products */,
+				32168FA42F0BF7550057ABBD /* CareerKids.app */,
 			);
-			sourceTree = "<group>";
-		};
-		321FD18F2EF5BDCC003ADA5E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				321FD18E2EF5BDCC003ADA5E /* CareerKids.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -67,7 +59,7 @@
 			packageProductDependencies = (
 			);
 			productName = CareerKids;
-			productReference = 321FD18E2EF5BDCC003ADA5E /* CareerKids.app */;
+			productReference = 32168FA42F0BF7550057ABBD /* CareerKids.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -95,7 +87,7 @@
 			mainGroup = 321FD1852EF5BDCC003ADA5E;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 321FD18F2EF5BDCC003ADA5E /* Products */;
+			productRefGroup = 321FD1852EF5BDCC003ADA5E;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
