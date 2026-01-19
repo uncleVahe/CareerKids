@@ -10,6 +10,16 @@ import Combine
 
 class CareerListViewModel: ObservableObject {
     @Published var careers: [Career] = []
+    @Published var showOnlyFavorites = false
+    
+    private let favoritesService = FavoritesService.shared
+    
+    var filteredCareers: [Career] {
+        if showOnlyFavorites {
+            return careers.filter { favoritesService.isFavorite($0.id) }
+        }
+        return careers
+    }
     
     func loadCareers() {
         careers = [
@@ -49,5 +59,14 @@ class CareerListViewModel: ObservableObject {
                 color: .orange
             )
         ]
+    }
+    
+    func toggleFavorite(_ career: Career) {
+        favoritesService.toggleFavorite(career.id)
+        objectWillChange.send()
+    }
+    
+    func isFavorite(_ career: Career) -> Bool {
+        return favoritesService.isFavorite(career.id)
     }
 }

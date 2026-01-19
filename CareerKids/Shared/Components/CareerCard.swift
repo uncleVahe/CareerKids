@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CareerCard: View {
     let career: Career
+    let isFavorite: Bool
+    let onFavoriteTap: () -> Void
     
     var body: some View {
         HStack(spacing: 16) {
@@ -37,6 +39,14 @@ struct CareerCard: View {
             
             Spacer()
             
+            Button(action: onFavoriteTap) {
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .font(.title3)
+                    .foregroundColor(isFavorite ? .red : .gray)
+                    .frame(width: 44, height: 44)
+            }
+            .buttonStyle(PlainButtonStyle())
+            
             // Стрілка
             Image(systemName: "chevron.right")
                 .foregroundColor(.gray)
@@ -55,6 +65,21 @@ struct CareerCard: View {
         description: "Створює додатки та веб-сайти",
         icon: "laptopcomputer",
         color: .blue
-    ))
+    ),
+    isFavorite: false,
+    onFavoriteTap: {}
+    )
+    
+    CareerCard(
+        career: Career(
+            id: "2",
+            title: "Дизайнер",
+            description: "Малює красиві інтерфейси",
+            icon: "paintbrush.fill",
+            color: .purple
+        ),
+        isFavorite: true,
+        onFavoriteTap: {}
+    )
     .padding()
 }

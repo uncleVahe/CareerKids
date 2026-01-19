@@ -9,12 +9,15 @@ import SwiftUI
 
 struct CareerDetailView: View {
     let career: Career
-    @State private var isInterested = false
+    
+    // Відстежуємо стан favorites
+    @State private var isFavorite: Bool = false
+    private let favoritesService = FavoritesService.shared
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
-                // Велика іконка зверху
+            VStack(spacing: 30) {
+                // Icon
                 ZStack {
                     Circle()
                         .fill(career.color.opacity(0.2))
@@ -24,106 +27,126 @@ struct CareerDetailView: View {
                         .font(.system(size: 60))
                         .foregroundColor(career.color)
                 }
-                .padding(.top, 20)
+                .padding(.top, 40)
                 
-                // Назва
-                                Text(career.title)
-                                    .font(.system(size: 32, weight: .bold))
-                                
-                                // Опис
-                                Text(career.description)
-                                    .font(.title3)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
-                                
-                                // Детальна інформація
-                                VStack(alignment: .leading, spacing: 16) {
-                                    InfoRow(
-                                        icon: "graduationcap.fill",
-                                        title: "Навчання",
-                                        description: "Університет або курси програмування"
-                                    )
-                                    
-                                    InfoRow(
-                                        icon: "dollarsign.circle.fill",
-                                        title: "Зарплата",
-                                        description: "30,000 - 150,000 грн/місяць"
-                                    )
-                                    
-                                    InfoRow(
-                                        icon: "star.fill",
-                                        title: "Навички",
-                                        description: "Логіка, математика, англійська"
-                                    )
-                                }
-                                .padding()
-                                .background(Color(.systemBackground))
-                                .cornerRadius(16)
-                                .padding(.horizontal)
-                                
-                                // Кнопка "Цікаво!"
-                                Button(action: {
-                                    withAnimation(.spring()) {
-                                        isInterested.toggle()
-                                    }
-                                }) {
-                                    HStack {
-                                        Image(systemName: isInterested ? "heart.fill" : "heart")
-                                            .font(.title2)
-                                        
-                                        Text(isInterested ? "Додано в обране!" : "Цікаво!")
-                                            .font(.headline)
-                                    }
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(isInterested ? Color.green : career.color)
-                                    .cornerRadius(16)
-                                }
-                                .padding(.horizontal)
-                                .padding(.top, 8)
-                                
-                                Spacer()
-                            }
-                        }
-                        .navigationBarTitleDisplayMode(.inline)
-                    }
-                }
-
-                // Допоміжний компонент для інфо рядків
-                struct InfoRow: View {
-                    let icon: String
-                    let title: String
-                    let description: String
+                // Title
+                Text(career.title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                // Description
+                Text(career.description)
+                    .font(.title3)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                // Info rows
+                VStack(spacing: 12) {
+                    InfoRow(
+                        icon: "graduationcap.fill",
+                        title: "Навчання",
+                        description: "Університет або курси програмування",
+                        color: .blue
+                    )
                     
-                    var body: some View {
-                        HStack(alignment: .top, spacing: 12) {
-                            Image(systemName: icon)
-                                .font(.title2)
-                                .foregroundColor(.blue)
-                                .frame(width: 30)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(title)
-                                    .font(.headline)
-                                
-                                Text(description)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
+                    InfoRow(
+                        icon: "dollarsign.circle.fill",
+                        title: "Зарплата",
+                        description: "30,000 - 150,000 грн/місяць",
+                        color: .green
+                    )
+                    
+                    InfoRow(
+                        icon: "star.fill",
+                        title: "Навички",
+                        description: "Логіка, математика, англійська",
+                        color: .orange
+                    )
                 }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                //Синхронізована з Favorites
+                Button(action: {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                        favoritesService.toggleFavorite(career.id)
+                        isFavorite.toggle()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
+                            .font(.title3)
+                        
+                        Text(isFavorite ? "Додано в обране!" : "Цікаво!")
+                            .font(.headline)
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(isFavorite ? Color.green : Color.blue)
+                    .cornerRadius(16)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 30)
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            // Перевіряємо чи вже в favorites
+            isFavorite = favoritesService.isFavorite(career.id)
+        }
+    }
+}
 
-                #Preview {
-                    NavigationView {
-                        CareerDetailView(career: Career(
-                            id: "1",
-                            title: "Програміст",
-                            description: "Створює додатки та веб-сайти",
-                            icon: "laptopcomputer",
-                            color: .blue
-                        ))
-                    }
-                }
+// InfoRow component
+struct InfoRow: View {
+    let icon: String
+    let title: String
+    let description: String
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.2))
+                    .frame(width: 50, height: 50)
+                
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(color)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+}
+
+#Preview {
+    NavigationView {
+        CareerDetailView(
+            career: Career(
+                id: "programmer",
+                title: "Програміст",
+                description: "Створює додатки та веб-сайти",
+                icon: "laptopcomputer",
+                color: .blue
+            )
+        )
+    }
+}
