@@ -7,69 +7,102 @@
 
 import Foundation
 
-class FavoritesService {
+extension Notification.Name {
+    static let favoritesDidChange = Notification.Name("favoritesDidChange")
+}
+
+protocol FavoritesManaging {
+    func isFavorite(_ careerId: String) -> Bool
+    func toggleFavorite(_ careerId: String)
+    func removeFavorite(_ careerId: String)
+    func getFavorites() -> [String]
+    func clearAll()
+    var count: Int { get }
+}
+
+final class FavoritesService: FavoritesManaging {
     static let shared = FavoritesService()
     
-    private let defaults = UserDefaults.standard
+    private let defaults: UserDefaults
     private let favoritesKey = "FavoriteCareerIds"
+    private let queue = DispatchQueue(label: "com.careerkids.favorites", attributes: .concurrent)
     
-    private(set) var favoriteIds: Set<String> = []
+    private var _favoriteIds: Set<String> = []
     
-    init() {
+    private init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
         loadFavorites()
     }
     
-    // MARK: - Load
+    // MARK: - Private
     
     private func loadFavorites() {
-        if let ids = defaults.array(forKey: self.favoritesKey) as? [String] {
-            self.favoriteIds = Set(ids)
-            print("📂 Loaded \(ids.count) favorites: \(ids)")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            if let ids = self.defaults.array(forKey: self.favoritesKey) as? [String] {
+                self._favoriteIds = Set(ids)
+            }
         }
     }
     
-    // MARK: - Save
-    
     private func saveFavorites() {
-        let idsArray = Array(favoriteIds)
-        defaults.set(idsArray, forKey: favoritesKey)
-        print("💾 Saved \(idsArray.count) favorites")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            self.defaults.set(Array(self._favoriteIds), forKey: self.favoritesKey)
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .favoritesDidChange, object: nil)
+            }
+        }
     }
     
-    // MARK: - Public Methods
+    // MARK: - Public
     
     func isFavorite(_ careerId: String) -> Bool {
-        return favoriteIds.contains(careerId)
+        queue.sync {
+            _favoriteIds.contains(careerId)
+        }
     }
     
     func toggleFavorite(_ careerId: String) {
-        if favoriteIds.contains(careerId) {
-            favoriteIds.remove(careerId)
-            print("💔 Removed from favorites: \(careerId)")
-        } else {
-            favoriteIds.insert(careerId)
-            print("❤️ Added to favorites: \(careerId)")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            
+            if self._favoriteIds.contains(careerId) {
+                self._favoriteIds.remove(careerId)
+            } else {
+                self._favoriteIds.insert(careerId)
+            }
+            
+            self.saveFavorites()
         }
-        saveFavorites()
-    }
-    
-    func addFavorite(_ careerId: String) {
-        favoriteIds.insert(careerId)
-        saveFavorites()
     }
     
     func removeFavorite(_ careerId: String) {
-        favoriteIds.remove(careerId)
-        saveFavorites()
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            self._favoriteIds.remove(careerId)
+            self.defaults.set(Array(self._favoriteIds), forKey: self.favoritesKey)
+        }
+    }
+    
+    func getFavorites() -> [String] {
+        queue.sync {
+            Array(_favoriteIds)
+        }
     }
     
     func clearAll() {
-        favoriteIds.removeAll()
-        saveFavorites()
-        print("🗑️ All favorites cleared")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            self._favoriteIds.removeAll()
+            self.saveFavorites()
+        }
     }
     
     var count: Int {
-        return favoriteIds.count
+        queue.sync {
+            _favoriteIds.count
+        }
     }
 }

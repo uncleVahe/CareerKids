@@ -10,6 +10,7 @@ import SwiftUI
 struct QuizView: View {
     @StateObject var viewModel = QuizViewModel()
     @Environment(\.dismiss) var dismiss
+    var onViewCareersWithCategory: ((CareerCategory) -> Void)?
     
     var body: some View {
         ZStack {
@@ -23,11 +24,19 @@ struct QuizView: View {
             
             if viewModel.showResult, let result = viewModel.quizResult {
                 // Результат тесту
-                QuizResultView(result: result, onRestart: {
-                    viewModel.restartQuiz()
-                }, onClose: {
-                    dismiss()
-                })
+                QuizResultView(
+                    result: result,
+                    onRestart: {
+                        viewModel.restartQuiz()
+                    },
+                    onClose: {
+                        dismiss()
+                    },
+                    onViewCareers: { category in
+                        dismiss()
+                        onViewCareersWithCategory?(category)
+                    }
+                )
             } else {
                 // Питання тесту
                 VStack(spacing: 0) {
@@ -116,6 +125,10 @@ struct QuizQuestionView: View {
     let question: QuizQuestion
     let onAnswerSelected: (QuizAnswer) -> Void
     
+    @State private var customAnswerText: String = ""
+    @State private var showCustomInput: Bool = false
+    @FocusState private var isCustomFieldFocused: Bool
+    
     var body: some View {
         VStack(spacing: 30) {
             Spacer()
@@ -151,11 +164,85 @@ struct QuizQuestionView: View {
                     }
                     .buttonStyle(ScaleButtonStyle())
                 }
+                
+                // Кнопка "Свій варіант" якщо дозволено
+                if question.allowsCustomAnswer {
+                    Button(action: {
+                        withAnimation {
+                            showCustomInput.toggle()
+                            if showCustomInput {
+                                isCustomFieldFocused = true
+                            }
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "pencil")
+                            Text(showCustomInput ? "Сховати" : "Написати свій варіант")
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.blue)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(12)
+                    }
+                    
+                    // Поле для власної відповіді
+                    if showCustomInput {
+                        VStack(spacing: 12) {
+                            TextField("Твоя відповідь...", text: $customAnswerText)
+                                .textFieldStyle(.roundedBorder)
+                                .focused($isCustomFieldFocused)
+                                .submitLabel(.done)
+                                .onSubmit {
+                                    submitCustomAnswer()
+                                }
+                            
+                            Button(action: {
+                                submitCustomAnswer()
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                    Text("Підтвердити")
+                                }
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(customAnswerText.isEmpty ? Color.gray : Color.green)
+                                .cornerRadius(12)
+                            }
+                            .disabled(customAnswerText.isEmpty)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+                        .transition(.scale.combined(with: .opacity))
+                    }
+                }
             }
             .padding(.horizontal, 30)
             
             Spacer()
         }
+    }
+    
+    private func submitCustomAnswer() {
+        guard !customAnswerText.isEmpty else { return }
+        
+        // Створюємо власну відповідь з порожніми категоріями
+        // AI пізніше проаналізує текст
+        let customAnswer = QuizAnswer(
+            id: UUID().uuidString,
+            text: customAnswerText,
+            careerCategories: [], // AI визначить категорії
+            isCustom: true
+        )
+        
+        onAnswerSelected(customAnswer)
+        customAnswerText = ""
+        showCustomInput = false
     }
 }
 

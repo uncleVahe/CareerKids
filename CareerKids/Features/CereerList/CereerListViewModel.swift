@@ -8,65 +8,72 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class CareerListViewModel: ObservableObject {
     @Published var careers: [Career] = []
     @Published var showOnlyFavorites = false
+    @Published var showRecommendedOnly = true
+    @Published var refreshTrigger: UUID = UUID() // Для примусового оновлення
+    @Published var recommendedCategory: CareerCategory?
     
     private let favoritesService = FavoritesService.shared
+    private var cancellables = Set<AnyCancellable>()
     
-    var filteredCareers: [Career] {
-        if showOnlyFavorites {
-            return careers.filter { favoritesService.isFavorite($0.id) }
-        }
-        return careers
+    init(recommendedCategory: CareerCategory? = nil) {
+        self.recommendedCategory = recommendedCategory
+        
+        // Слухаємо зміни в обраних професіях
+        NotificationCenter.default.publisher(for: .favoritesDidChange)
+            .sink { [weak self] _ in
+                self?.refreshTrigger = UUID()
+            }
+            .store(in: &cancellables)
     }
     
+    var filteredCareers: [Career] {
+        // Використовуємо refreshTrigger щоб computed property перерахувалась
+        _ = refreshTrigger
+        
+        var filtered = careers
+        
+        // Фільтр по обраним
+        if showOnlyFavorites {
+            filtered = filtered.filter { favoritesService.isFavorite($0.id) }
+        }
+        
+        // Фільтр та сортування по рекомендованій категорії
+        if let category = recommendedCategory, showRecommendedOnly {
+            // Спочатку показуємо професії з рекомендованої категорії
+            let recommended = filtered.filter { $0.category == category }
+            let others = filtered.filter { $0.category != category }
+            filtered = recommended + others
+        }
+        
+        return filtered
+    }
+    
+    /// Завантажує список професій з JSON файлу через DataLoaderService
     func loadCareers() {
-        careers = [
-            Career(
-                id: "1",
-                title: "Програміст",
-                description: "Створює додатки та веб-сайти",
-                icon: "laptopcomputer",
-                color: .blue
-            ),
-            Career(
-                id: "2",
-                title: "Дизайнер",
-                description: "Малює красиві інтерфейси",
-                icon: "paintbrush.fill",
-                color: .purple
-            ),
-            Career(
-                id: "3",
-                title: "Вчитель",
-                description: "Допомагає дітям навчатись",
-                icon: "book.fill",
-                color: .green
-            ),
-            Career(
-                id: "4",
-                title: "Лікар",
-                description: "Лікує людей та рятує життя",
-                icon: "heart.fill",
-                color: .red
-            ),
-            Career(
-                id: "5",
-                title: "Інженер",
-                description: "Будує машини та механізми",
-                icon: "gearshape.fill",
-                color: .orange
-            )
-        ]
+        careers = DataLoaderService.shared.loadCareers()
     }
     
     func toggleFavorite(_ career: Career) {
         favoritesService.toggleFavorite(career.id)
-        objectWillChange.send()
+        // No need to manually trigger refresh - NotificationCenter will handle it
     }
     
     func isFavorite(_ career: Career) -> Bool {
         return favoritesService.isFavorite(career.id)
+    }
+    
+    func showAllCareers() {
+        showOnlyFavorites = false
+        showRecommendedOnly = false
+    }
+    
+    func setRecommendedCategory(_ category: CareerCategory) {
+        recommendedCategory = category
+        showRecommendedOnly = true
+        refreshTrigger = UUID()
     }
 }

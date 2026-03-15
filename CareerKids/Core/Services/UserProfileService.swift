@@ -7,58 +7,94 @@
 
 import Foundation
 
-class UserProfileService {
+protocol UserProfileProviding {
+    func getProfile() -> UserProfile
+    func saveProfile(name: String, age: Int)
+    func saveProfileImage(_ imageData: Data?)
+    func getProfileImage() -> Data?
+    func clearProfile()
+    var hasCompletedOnboarding: Bool { get }
+}
+
+final class UserProfileService: UserProfileProviding {
     static let shared = UserProfileService()
     
-    private let defaults = UserDefaults.standard
+    private let defaults: UserDefaults
+    private let queue = DispatchQueue(label: "com.careerkids.userprofile", attributes: .concurrent)
     
     private enum Keys {
         static let hasCompletedOnboarding = "hasCompletedOnboarding"
         static let userName = "userName"
         static let userAge = "userAge"
+        static let profileImageData = "profileImageData"
     }
     
-    //MARK: - Onboarding
+    // MARK: - Initialization
+    
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+    
+    // MARK: - Public API
     
     var hasCompletedOnboarding: Bool {
-        get { defaults.bool(forKey: Keys.hasCompletedOnboarding) }
-        set { defaults.set(newValue, forKey: Keys.hasCompletedOnboarding) }
+        queue.sync {
+            defaults.bool(forKey: Keys.hasCompletedOnboarding)
+        }
     }
     
-    // MARK: - User Profile
-    var userName: String {
-        get { defaults.string(forKey: Keys.userName) ?? "" }
-        set { defaults.set(newValue, forKey: Keys.userName) }
+    func getProfile() -> UserProfile {
+        queue.sync {
+            let name = defaults.string(forKey: Keys.userName) ?? ""
+            let ageValue = defaults.integer(forKey: Keys.userAge)
+            let age = ageValue > 0 ? ageValue : nil
+            
+            return UserProfile(
+                name: name,
+                age: age,
+                hasCompletedOnboarding: defaults.bool(forKey: Keys.hasCompletedOnboarding)
+            )
+        }
     }
-    
-    var userAge: Int {
-        get { defaults.integer(forKey: Keys.userAge) }
-        set { defaults.set(newValue, forKey: Keys.userAge) }
-    }
-    
-    //MARK: - Methods
     
     func saveProfile(name: String, age: Int) {
-        userName = name
-        userAge = age
-        hasCompletedOnboarding = true
+        guard !name.isEmpty, age > 0 else {
+            assertionFailure("Invalid profile data: name=\(name), age=\(age)")
+            return
+        }
         
-        print("✅ Profile saved: \(name), age: \(age)")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            self.defaults.set(name, forKey: Keys.userName)
+            self.defaults.set(age, forKey: Keys.userAge)
+            self.defaults.set(true, forKey: Keys.hasCompletedOnboarding)
+        }
     }
     
     func clearProfile() {
-            defaults.removeObject(forKey: Keys.hasCompletedOnboarding)
-            defaults.removeObject(forKey: Keys.userName)
-            defaults.removeObject(forKey: Keys.userAge)
-            
-            print("🗑️ Profile cleared")
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            self.defaults.removeObject(forKey: Keys.hasCompletedOnboarding)
+            self.defaults.removeObject(forKey: Keys.userName)
+            self.defaults.removeObject(forKey: Keys.userAge)
+            self.defaults.removeObject(forKey: Keys.profileImageData)
         }
-        
-        func getProfile() -> UserProfile {
-            return UserProfile(
-                name: userName,
-                age: userAge > 0 ? userAge : nil,
-                hasCompletedOnboarding: hasCompletedOnboarding
-            )
+    }
+    
+    func saveProfileImage(_ imageData: Data?) {
+        queue.async(flags: .barrier) { [weak self] in
+            guard let self = self else { return }
+            if let data = imageData {
+                self.defaults.set(data, forKey: Keys.profileImageData)
+            } else {
+                self.defaults.removeObject(forKey: Keys.profileImageData)
+            }
         }
+    }
+    
+    func getProfileImage() -> Data? {
+        queue.sync {
+            defaults.data(forKey: Keys.profileImageData)
+        }
+    }
 }

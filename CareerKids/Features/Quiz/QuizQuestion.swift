@@ -12,12 +12,29 @@ struct QuizQuestion: Identifiable {
     let question: String
     let emoji: String
     let answers: [QuizAnswer]
+    let allowsCustomAnswer: Bool // Дозволяє власну відповідь
+    
+    init(id: String, question: String, emoji: String, answers: [QuizAnswer], allowsCustomAnswer: Bool = false) {
+        self.id = id
+        self.question = question
+        self.emoji = emoji
+        self.answers = answers
+        self.allowsCustomAnswer = allowsCustomAnswer
+    }
 }
 
 struct QuizAnswer: Identifiable {
     let id: String
     let text: String
     let careerCategories: [CareerCategory]
+    let isCustom: Bool // Чи це власна відповідь
+    
+    init(id: String, text: String, careerCategories: [CareerCategory], isCustom: Bool = false) {
+        self.id = id
+        self.text = text
+        self.careerCategories = careerCategories
+        self.isCustom = isCustom
+    }
 }
 
 enum CareerCategory: String, CaseIterable {
@@ -61,4 +78,5 @@ struct QuizResult {
     let topCategory: CareerCategory
     let percentages: [CareerCategory: Int]
     let recommendedCareers: [String]
+    let customAnswers: [String] // Власні відповіді користувача для AI аналізу
 }

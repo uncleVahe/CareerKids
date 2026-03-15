@@ -1,0 +1,544 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "question": "Що тобі найбільше подобається робити у вільний час?",
+      "emoji": "🎮",
+      "answers": [
+        {
+          "id": "1a",
+          "text": "Грати в комп'ютерні ігри",
+          "categories": ["technology"]
+        },
+        {
+          "id": "1b",
+          "text": "Малювати або створювати щось руками",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "1c",
+          "text": "Читати книжки або дізнаватись нове",
+          "categories": ["science"]
+        },
+        {
+          "id": "1d",
+          "text": "Гратись з друзями",
+          "categories": ["social", "sports"]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "question": "Який предмет тобі найцікавіше вчити в школі?",
+      "emoji": "📚",
+      "answers": [
+        {
+          "id": "2a",
+          "text": "Математика або інформатика",
+          "categories": ["technology", "science"]
+        },
+        {
+          "id": "2b",
+          "text": "Малювання або музика",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "2c",
+          "text": "Природознавство або біологія",
+          "categories": ["science", "nature"]
+        },
+        {
+          "id": "2d",
+          "text": "Фізкультура",
+          "categories": ["sports"]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "question": "Яку ти хочеш мати суперсилу?",
+      "emoji": "⚡",
+      "answers": [
+        {
+          "id": "3a",
+          "text": "Розуміти всю техніку і роботів",
+          "categories": ["technology"]
+        },
+        {
+          "id": "3b",
+          "text": "Створювати красиві речі з нічого",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "3c",
+          "text": "Знати відповіді на всі питання",
+          "categories": ["science"]
+        },
+        {
+          "id": "3d",
+          "text": "Розуміти людей і допомагати їм",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "question": "Де б ти хотів працювати в майбутньому?",
+      "emoji": "🏢",
+      "answers": [
+        {
+          "id": "4a",
+          "text": "В офісі з комп'ютерами",
+          "categories": ["technology", "business"]
+        },
+        {
+          "id": "4b",
+          "text": "В студії або майстерні",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "4c",
+          "text": "В лабораторії або на природі",
+          "categories": ["science", "nature"]
+        },
+        {
+          "id": "4d",
+          "text": "З людьми (лікарня, школа)",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "question": "Що тебе найбільше мотивує?",
+      "emoji": "🎯",
+      "answers": [
+        {
+          "id": "5a",
+          "text": "Створювати нові технології",
+          "categories": ["technology"]
+        },
+        {
+          "id": "5b",
+          "text": "Виражати себе через творчість",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "5c",
+          "text": "Робити наукові відкриття",
+          "categories": ["science"]
+        },
+        {
+          "id": "5d",
+          "text": "Допомагати іншим людям",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "question": "Як ти любиш проводити канікули?",
+      "emoji": "🌴",
+      "answers": [
+        {
+          "id": "6a",
+          "text": "Відвідувати нові місця та подорожувати",
+          "categories": ["social", "nature"]
+        },
+        {
+          "id": "6b",
+          "text": "Займатись хобі вдома",
+          "categories": ["creative", "technology"]
+        },
+        {
+          "id": "6c",
+          "text": "Відпочивати на природі",
+          "categories": ["nature", "sports"]
+        },
+        {
+          "id": "6d",
+          "text": "Відвідувати музеї та виставки",
+          "categories": ["art", "science"]
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "question": "Що б ти хотів винайти або створити?",
+      "emoji": "💡",
+      "answers": [
+        {
+          "id": "7a",
+          "text": "Новий додаток або гру",
+          "categories": ["technology"]
+        },
+        {
+          "id": "7b",
+          "text": "Картину або музику",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "7c",
+          "text": "Ліки від хвороби",
+          "categories": ["science", "social"]
+        },
+        {
+          "id": "7d",
+          "text": "Успішний бізнес",
+          "categories": ["business"]
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "question": "Яка з цих діяльностей тобі найцікавіша?",
+      "emoji": "🎨",
+      "answers": [
+        {
+          "id": "8a",
+          "text": "Збирати конструктори або техніку",
+          "categories": ["technology", "creative"]
+        },
+        {
+          "id": "8b",
+          "text": "Малювати або робити Hand-made",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "8c",
+          "text": "Проводити експерименти",
+          "categories": ["science"]
+        },
+        {
+          "id": "8d",
+          "text": "Організовувати ігри для друзів",
+          "categories": ["social", "business"]
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "question": "Коли ти вирішуєш складну задачу, що тобі допомагає?",
+      "emoji": "🧩",
+      "answers": [
+        {
+          "id": "9a",
+          "text": "Логіка та алгоритми",
+          "categories": ["technology", "science"]
+        },
+        {
+          "id": "9b",
+          "text": "Креативність та уява",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "9c",
+          "text": "Дослідження та експерименти",
+          "categories": ["science", "nature"]
+        },
+        {
+          "id": "9d",
+          "text": "Порада друзів",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "question": "Яке середовище тобі більше подобається?",
+      "emoji": "🌍",
+      "answers": [
+        {
+          "id": "10a",
+          "text": "Сучасний офіс з технологіями",
+          "categories": ["technology", "business"]
+        },
+        {
+          "id": "10b",
+          "text": "Творча студія або майстерня",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "10c",
+          "text": "Природа та відкриті простори",
+          "categories": ["nature", "sports"]
+        },
+        {
+          "id": "10d",
+          "text": "Місце де багато людей",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "question": "Що тебе надихає найбільше?",
+      "emoji": "✨",
+      "answers": [
+        {
+          "id": "11a",
+          "text": "Нові гаджети та технології",
+          "categories": ["technology"]
+        },
+        {
+          "id": "11b",
+          "text": "Красиві речі та мистецтво",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "11c",
+          "text": "Цікаві факти та відкриття",
+          "categories": ["science"]
+        },
+        {
+          "id": "11d",
+          "text": "Історії успіху людей",
+          "categories": ["social", "business"]
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "question": "Як ти вчишся найкраще?",
+      "emoji": "📖",
+      "answers": [
+        {
+          "id": "12a",
+          "text": "Практикуючись та експериментуючи",
+          "categories": ["technology", "science"]
+        },
+        {
+          "id": "12b",
+          "text": "Роблячи творчі проекти",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "12c",
+          "text": "Читаючи та досліджуючи",
+          "categories": ["science"]
+        },
+        {
+          "id": "12d",
+          "text": "Обговорюючи з іншими",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "question": "Яка твоя улюблена активність на вихідних?",
+      "emoji": "🎪",
+      "answers": [
+        {
+          "id": "13a",
+          "text": "Грати в відеоігри або програмувати",
+          "categories": ["technology"]
+        },
+        {
+          "id": "13b",
+          "text": "Малювати, співати, танцювати",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "13c",
+          "text": "Займатись спортом",
+          "categories": ["sports", "nature"]
+        },
+        {
+          "id": "13d",
+          "text": "Зустрічатись з друзями",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "question": "Що тобі найлегше дається?",
+      "emoji": "🌟",
+      "answers": [
+        {
+          "id": "14a",
+          "text": "Розбиратись у техніці",
+          "categories": ["technology"]
+        },
+        {
+          "id": "14b",
+          "text": "Придумувати нові ідеї",
+          "categories": ["creative", "business"]
+        },
+        {
+          "id": "14c",
+          "text": "Аналізувати інформацію",
+          "categories": ["science"]
+        },
+        {
+          "id": "14d",
+          "text": "Спілкуватись з людьми",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "question": "Яку роль ти найчастіше виконуєш у групових проектах?",
+      "emoji": "👥",
+      "answers": [
+        {
+          "id": "15a",
+          "text": "Технічний спеціаліст",
+          "categories": ["technology"]
+        },
+        {
+          "id": "15b",
+          "text": "Креативний дизайнер",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "15c",
+          "text": "Дослідник та аналітик",
+          "categories": ["science"]
+        },
+        {
+          "id": "15d",
+          "text": "Організатор та лідер",
+          "categories": ["social", "business"]
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "question": "Що важливіше для тебе в майбутній роботі?",
+      "emoji": "💼",
+      "answers": [
+        {
+          "id": "16a",
+          "text": "Працювати з новими технологіями",
+          "categories": ["technology"]
+        },
+        {
+          "id": "16b",
+          "text": "Мати свободу творчості",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "16c",
+          "text": "Робити щось важливе для науки",
+          "categories": ["science"]
+        },
+        {
+          "id": "16d",
+          "text": "Допомагати людям",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "question": "Який твій стиль роботи?",
+      "emoji": "⚙️",
+      "answers": [
+        {
+          "id": "17a",
+          "text": "Системний та організований",
+          "categories": ["technology", "business"]
+        },
+        {
+          "id": "17b",
+          "text": "Вільний та імпровізований",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "17c",
+          "text": "Детальний та ретельний",
+          "categories": ["science"]
+        },
+        {
+          "id": "17d",
+          "text": "Командний та колаборативний",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "question": "Яка твоя улюблена форма розваги?",
+      "emoji": "🎬",
+      "answers": [
+        {
+          "id": "18a",
+          "text": "Документальні фільми про технології",
+          "categories": ["technology", "science"]
+        },
+        {
+          "id": "18b",
+          "text": "Художні фільми та серіали",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "18c",
+          "text": "Наукові передачі та TED talks",
+          "categories": ["science"]
+        },
+        {
+          "id": "18d",
+          "text": "Шоу та програми про людей",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "question": "Що б ти хотів покращити у світі?",
+      "emoji": "🌱",
+      "answers": [
+        {
+          "id": "19a",
+          "text": "Технології та інновації",
+          "categories": ["technology"]
+        },
+        {
+          "id": "19b",
+          "text": "Культуру та мистецтво",
+          "categories": ["art", "creative"]
+        },
+        {
+          "id": "19c",
+          "text": "Екологію та природу",
+          "categories": ["nature", "science"]
+        },
+        {
+          "id": "19d",
+          "text": "Соціальні відносини",
+          "categories": ["social"]
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "question": "Як ти бачиш свій ідеальний день на роботі?",
+      "emoji": "☀️",
+      "answers": [
+        {
+          "id": "20a",
+          "text": "Працювати за комп'ютером над проектом",
+          "categories": ["technology"]
+        },
+        {
+          "id": "20b",
+          "text": "Створювати щось нове та унікальне",
+          "categories": ["creative", "art"]
+        },
+        {
+          "id": "20c",
+          "text": "Досліджувати та аналізувати",
+          "categories": ["science"]
+        },
+        {
+          "id": "20d",
+          "text": "Працювати з командою людей",
+          "categories": ["social", "business"]
+        }
+      ]
+    }
+  ]
+}

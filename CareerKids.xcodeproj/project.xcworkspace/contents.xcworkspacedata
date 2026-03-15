@@ -4,4 +4,10 @@
    <FileRef
       location = "self:">
    </FileRef>
+   <FileRef
+      location = "group:FavoritesService.swift">
+   </FileRef>
+   <FileRef
+      location = "group:PROJECT_ANALYSIS.md">
+   </FileRef>
 </Workspace>

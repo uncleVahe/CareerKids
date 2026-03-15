@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class OnboardingViewModel: ObservableObject {
     @Published var currentStep: Int = 0
     @Published var userName: String = ""
@@ -41,6 +42,5 @@ class OnboardingViewModel: ObservableObject {
     
     func completeOnboarding() {
         UserProfileService.shared.saveProfile(name: userName, age: userAge)
-        print("Onboarding completed: \(userName), age: \(userAge)")
     }
 }

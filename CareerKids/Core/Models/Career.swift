@@ -14,4 +14,5 @@ struct Career: Identifiable {
     let description: String
     let icon: String
     let color: Color
+    let category: CareerCategory?
 }

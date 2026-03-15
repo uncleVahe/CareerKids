@@ -1,0 +1,324 @@
+{
+  "careers": [
+    {
+      "id": "programmer",
+      "title": "Програміст",
+      "shortDescription": "Створює додатки та веб-сайти",
+      "icon": "laptopcomputer",
+      "color": "blue",
+      "category": "technology"
+    },
+    {
+      "id": "designer",
+      "title": "Дизайнер",
+      "shortDescription": "Малює красиві інтерфейси та графіку",
+      "icon": "paintbrush.fill",
+      "color": "purple",
+      "category": "creative"
+    },
+    {
+      "id": "teacher",
+      "title": "Вчитель",
+      "shortDescription": "Допомагає дітям навчатись та розвиватись",
+      "icon": "book.fill",
+      "color": "green",
+      "category": "social"
+    },
+    {
+      "id": "doctor",
+      "title": "Лікар",
+      "shortDescription": "Лікує людей та рятує життя",
+      "icon": "heart.fill",
+      "color": "red",
+      "category": "social"
+    },
+    {
+      "id": "engineer",
+      "title": "Інженер",
+      "shortDescription": "Будує машини та механізми",
+      "icon": "gearshape.fill",
+      "color": "orange",
+      "category": "technology"
+    },
+    {
+      "id": "architect",
+      "title": "Архітектор",
+      "shortDescription": "Проектує будинки та споруди",
+      "icon": "building.2.fill",
+      "color": "indigo",
+      "category": "creative"
+    },
+    {
+      "id": "scientist",
+      "title": "Вчений",
+      "shortDescription": "Досліджує світ та робить відкриття",
+      "icon": "flask.fill",
+      "color": "green",
+      "category": "science"
+    },
+    {
+      "id": "musician",
+      "title": "Музикант",
+      "shortDescription": "Створює та виконує музику",
+      "icon": "music.note",
+      "color": "pink",
+      "category": "art"
+    },
+    {
+      "id": "chef",
+      "title": "Кухар",
+      "shortDescription": "Готує смачну їжу",
+      "icon": "fork.knife",
+      "color": "orange",
+      "category": "creative"
+    },
+    {
+      "id": "athlete",
+      "title": "Спортсмен",
+      "shortDescription": "Займається професійним спортом",
+      "icon": "figure.run",
+      "color": "red",
+      "category": "sports"
+    },
+    {
+      "id": "photographer",
+      "title": "Фотограф",
+      "shortDescription": "Робить професійні фотографії",
+      "icon": "camera.fill",
+      "color": "purple",
+      "category": "art"
+    },
+    {
+      "id": "veterinarian",
+      "title": "Ветеринар",
+      "shortDescription": "Лікує тварин",
+      "icon": "pawprint.fill",
+      "color": "green",
+      "category": "nature"
+    },
+    {
+      "id": "psychologist",
+      "title": "Психолог",
+      "shortDescription": "Допомагає людям з їхніми проблемами",
+      "icon": "brain.head.profile",
+      "color": "blue",
+      "category": "social"
+    },
+    {
+      "id": "entrepreneur",
+      "title": "Підприємець",
+      "shortDescription": "Створює та розвиває бізнес",
+      "icon": "briefcase.fill",
+      "color": "orange",
+      "category": "business"
+    },
+    {
+      "id": "animator",
+      "title": "Аніматор",
+      "shortDescription": "Створює мультфільми та анімацію",
+      "icon": "film.fill",
+      "color": "purple",
+      "category": "creative"
+    },
+    {
+      "id": "pilot",
+      "title": "Пілот",
+      "shortDescription": "Керує літаками",
+      "icon": "airplane",
+      "color": "blue",
+      "category": "technology"
+    },
+    {
+      "id": "journalist",
+      "title": "Журналіст",
+      "shortDescription": "Пише статті та новини",
+      "icon": "newspaper.fill",
+      "color": "indigo",
+      "category": "social"
+    },
+    {
+      "id": "lawyer",
+      "title": "Юрист",
+      "shortDescription": "Захищає права людей",
+      "icon": "scale.3d",
+      "color": "indigo",
+      "category": "business"
+    },
+    {
+      "id": "game_developer",
+      "title": "Розробник ігор",
+      "shortDescription": "Створює відеоігри",
+      "icon": "gamecontroller.fill",
+      "color": "blue",
+      "category": "technology"
+    },
+    {
+      "id": "biologist",
+      "title": "Біолог",
+      "shortDescription": "Вивчає живі організми",
+      "icon": "leaf.fill",
+      "color": "teal",
+      "category": "science"
+    },
+    {
+      "id": "actor",
+      "title": "Актор",
+      "shortDescription": "Грає в фільмах та театрі",
+      "icon": "theatermasks.fill",
+      "color": "pink",
+      "category": "art"
+    },
+    {
+      "id": "chemist",
+      "title": "Хімік",
+      "shortDescription": "Досліджує речовини та реакції",
+      "icon": "testtube.2",
+      "color": "green",
+      "category": "science"
+    },
+    {
+      "id": "ecologist",
+      "title": "Еколог",
+      "shortDescription": "Захищає природу та довкілля",
+      "icon": "globe.americas.fill",
+      "color": "teal",
+      "category": "nature"
+    },
+    {
+      "id": "robotics_engineer",
+      "title": "Інженер-робототехнік",
+      "shortDescription": "Створює та програмує роботів",
+      "icon": "cpu",
+      "color": "blue",
+      "category": "technology"
+    },
+    {
+      "id": "dentist",
+      "title": "Стоматолог",
+      "shortDescription": "Лікує зуби",
+      "icon": "cross.case.fill",
+      "color": "red",
+      "category": "social"
+    },
+    {
+      "id": "translator",
+      "title": "Перекладач",
+      "shortDescription": "Перекладає з однієї мови на іншу",
+      "icon": "text.bubble.fill",
+      "color": "indigo",
+      "category": "social"
+    },
+    {
+      "id": "astronomer",
+      "title": "Астроном",
+      "shortDescription": "Вивчає зірки та планети",
+      "icon": "sparkles",
+      "color": "indigo",
+      "category": "science"
+    },
+    {
+      "id": "coach",
+      "title": "Тренер",
+      "shortDescription": "Навчає спортивним навичкам",
+      "icon": "figure.basketball",
+      "color": "red",
+      "category": "sports"
+    },
+    {
+      "id": "writer",
+      "title": "Письменник",
+      "shortDescription": "Пише книги та історії",
+      "icon": "pencil.and.outline",
+      "color": "purple",
+      "category": "art"
+    },
+    {
+      "id": "fashion_designer",
+      "title": "Модельєр",
+      "shortDescription": "Створює одяг та аксесуари",
+      "icon": "tshirt.fill",
+      "color": "pink",
+      "category": "creative"
+    },
+    {
+      "id": "data_scientist",
+      "title": "Data Scientist",
+      "shortDescription": "Аналізує великі дані",
+      "icon": "chart.bar.fill",
+      "color": "blue",
+      "category": "technology"
+    },
+    {
+      "id": "pharmacist",
+      "title": "Фармацевт",
+      "shortDescription": "Готує ліки та консультує",
+      "icon": "pills.fill",
+      "color": "teal",
+      "category": "science"
+    },
+    {
+      "id": "electrician",
+      "title": "Електрик",
+      "shortDescription": "Працює з електричними системами",
+      "icon": "bolt.fill",
+      "color": "yellow",
+      "category": "technology"
+    },
+    {
+      "id": "youtuber",
+      "title": "YouTube блогер",
+      "shortDescription": "Створює відео контент",
+      "icon": "play.rectangle.fill",
+      "color": "red",
+      "category": "creative"
+    },
+    {
+      "id": "makeup_artist",
+      "title": "Візажист",
+      "shortDescription": "Робить професійний макіяж",
+      "icon": "eyebrow",
+      "color": "pink",
+      "category": "creative"
+    },
+    {
+      "id": "mechanic",
+      "title": "Механік",
+      "shortDescription": "Ремонтує автомобілі та техніку",
+      "icon": "wrench.and.screwdriver.fill",
+      "color": "orange",
+      "category": "technology"
+    },
+    {
+      "id": "interior_designer",
+      "title": "Дизайнер інтер'єрів",
+      "shortDescription": "Оформлює приміщення",
+      "icon": "house.fill",
+      "color": "purple",
+      "category": "creative"
+    },
+    {
+      "id": "firefighter",
+      "title": "Пожежник",
+      "shortDescription": "Гасить пожежі та рятує людей",
+      "icon": "flame.fill",
+      "color": "red",
+      "category": "social"
+    },
+    {
+      "id": "marketing_manager",
+      "title": "Маркетолог",
+      "shortDescription": "Просуває продукти та послуги",
+      "icon": "megaphone.fill",
+      "color": "orange",
+      "category": "business"
+    },
+    {
+      "id": "environmental_engineer",
+      "title": "Інженер-еколог",
+      "shortDescription": "Розробляє рішення для захисту довкілля",
+      "icon": "leaf.arrow.circlepath",
+      "color": "teal",
+      "category": "nature"
+    }
+  ]
+}

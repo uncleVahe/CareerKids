@@ -8,69 +8,16 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class QuizViewModel: ObservableObject {
     @Published var currentQuestionIndex = 0
     @Published var selectedAnswers: [String: QuizAnswer] = [:]
     @Published var showResult = false
     @Published var quizResult: QuizResult?
+    @Published var isProcessingAnswer = false // Запобігає подвійному натисканню
     
-    let questions: [QuizQuestion] = [
-        QuizQuestion(
-            id: "1",
-            question: "Що тобі найбільше подобається робити у вільний час?",
-            emoji: "🎮",
-            answers: [
-                QuizAnswer(id: "1a", text: "Грати в комп'ютерні ігри", careerCategories: [.technology]),
-                QuizAnswer(id: "1b", text: "Малювати або створювати щось руками", careerCategories: [.creative, .art]),
-                QuizAnswer(id: "1c", text: "Читати книжки або дізнаватись нове", careerCategories: [.science]),
-                QuizAnswer(id: "1d", text: "Гратись з друзями", careerCategories: [.social, .sports])
-            ]
-        ),
-        QuizQuestion(
-            id: "2",
-            question: "Який предмет тобі найцікавіше вчити в школі?",
-            emoji: "📚",
-            answers: [
-                QuizAnswer(id: "2a", text: "Математика або інформатика", careerCategories: [.technology, .science]),
-                QuizAnswer(id: "2b", text: "Малювання або музика", careerCategories: [.art, .creative]),
-                QuizAnswer(id: "2c", text: "Природознавство або біологія", careerCategories: [.science, .nature]),
-                QuizAnswer(id: "2d", text: "Фізкультура", careerCategories: [.sports])
-            ]
-        ),
-        QuizQuestion(
-            id: "3",
-            question: "Яку ти хочеш мати суперсилу?",
-            emoji: "⚡",
-            answers: [
-                QuizAnswer(id: "3a", text: "Розуміти всю техніку і роботів", careerCategories: [.technology]),
-                QuizAnswer(id: "3b", text: "Створювати красиві речі з нічого", careerCategories: [.creative, .art]),
-                QuizAnswer(id: "3c", text: "Знати відповіді на всі питання", careerCategories: [.science]),
-                QuizAnswer(id: "3d", text: "Розуміти людей і допомагати їм", careerCategories: [.social])
-            ]
-        ),
-        QuizQuestion(
-            id: "4",
-            question: "Де б ти хотів працювати в майбутньому?",
-            emoji: "🏢",
-            answers: [
-                QuizAnswer(id: "4a", text: "В офісі з комп'ютерами", careerCategories: [.technology, .business]),
-                QuizAnswer(id: "4b", text: "В студії або майстерні", careerCategories: [.creative, .art]),
-                QuizAnswer(id: "4c", text: "В лабораторії або на природі", careerCategories: [.science, .nature]),
-                QuizAnswer(id: "4d", text: "З людьми (лікарня, школа)", careerCategories: [.social])
-            ]
-        ),
-        QuizQuestion(
-            id: "5",
-            question: "Що тебе найбільше мотивує?",
-            emoji: "🎯",
-            answers: [
-                QuizAnswer(id: "5a", text: "Створювати нові технології", careerCategories: [.technology]),
-                QuizAnswer(id: "5b", text: "Виражати себе через творчість", careerCategories: [.creative, .art]),
-                QuizAnswer(id: "5c", text: "Робити наукові відкриття", careerCategories: [.science]),
-                QuizAnswer(id: "5d", text: "Допомагати іншим людям", careerCategories: [.social])
-            ]
-        )
-    ]
+    // Завантажуємо питання з JSON файлу
+    let questions: [QuizQuestion] = DataLoaderService.shared.loadQuizQuestions()
     
     var currentQuestion: QuizQuestion? {
         guard currentQuestionIndex < questions.count else { return nil }
@@ -82,16 +29,24 @@ class QuizViewModel: ObservableObject {
     }
     
     var canGoBack: Bool {
-        currentQuestionIndex > 0
+        currentQuestionIndex > 0 && !isProcessingAnswer
     }
     
     func selectAnswer(_ answer: QuizAnswer) {
+        // Запобігаємо подвійному натисканню
+        guard !isProcessingAnswer else { return }
         guard let question = currentQuestion else { return }
+        
+        isProcessingAnswer = true
         selectedAnswers[question.id] = answer
         
-        // Перехід до наступного питання
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        // Перехід до наступного питання з затримкою
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.nextQuestion()
+            // Дозволяємо нові натискання після анімації
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.isProcessingAnswer = false
+            }
         }
     }
     
@@ -116,11 +71,18 @@ class QuizViewModel: ObservableObject {
     
     func calculateResult() {
         var categoryScores: [CareerCategory: Int] = [:]
+        var customAnswersTexts: [String] = []
         
         // Рахуємо скільки разів вибрана кожна категорія
         for answer in selectedAnswers.values {
-            for category in answer.careerCategories {
-                categoryScores[category, default: 0] += 1
+            if answer.isCustom {
+                // Зберігаємо власні відповіді для AI
+                customAnswersTexts.append(answer.text)
+            } else {
+                // Рахуємо стандартні відповіді
+                for category in answer.careerCategories {
+                    categoryScores[category, default: 0] += 1
+                }
             }
         }
         
@@ -140,11 +102,30 @@ class QuizViewModel: ObservableObject {
         quizResult = QuizResult(
             topCategory: topCategory,
             percentages: percentages,
-            recommendedCareers: recommendedCareers
+            recommendedCareers: recommendedCareers,
+            customAnswers: customAnswersTexts
         )
+        
+        // Зберігаємо статистику в профіль
+        saveTestStatistics(topCategory: topCategory)
         
         withAnimation(.spring()) {
             showResult = true
+        }
+    }
+    
+    /// Зберігає статистику тесту в профіль користувача
+    private func saveTestStatistics(topCategory: CareerCategory) {
+        // Збільшуємо лічильник пройдених тестів
+        let currentCount = UserDefaults.standard.integer(forKey: "testsCompleted")
+        UserDefaults.standard.set(currentCount + 1, forKey: "testsCompleted")
+        
+        // Зберігаємо топ категорію
+        UserDefaults.standard.set(topCategory.rawValue, forKey: "lastTopCategory")
+        
+        // Зберігаємо результат в історію тестів
+        if let result = quizResult {
+            TestHistoryService.shared.saveTest(result: result)
         }
     }
     

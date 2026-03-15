@@ -16,7 +16,7 @@ struct CareerDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 30) {
+            VStack(spacing: 20) {
                 // Icon
                 ZStack {
                     Circle()
@@ -27,7 +27,7 @@ struct CareerDetailView: View {
                         .font(.system(size: 60))
                         .foregroundColor(career.color)
                 }
-                .padding(.top, 40)
+                .padding(.top, 20)
                 
                 // Title
                 Text(career.title)
@@ -66,7 +66,7 @@ struct CareerDetailView: View {
                 }
                 .padding(.horizontal)
                 
-                Spacer()
+                Spacer(minLength: 0)
                 
                 //Синхронізована з Favorites
                 Button(action: {
@@ -89,7 +89,7 @@ struct CareerDetailView: View {
                     .cornerRadius(16)
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -145,7 +145,8 @@ struct InfoRow: View {
                 title: "Програміст",
                 description: "Створює додатки та веб-сайти",
                 icon: "laptopcomputer",
-                color: .blue
+                color: .blue,
+                category: .technology
             )
         )
     }

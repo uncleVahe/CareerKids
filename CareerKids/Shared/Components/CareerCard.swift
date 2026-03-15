@@ -64,7 +64,8 @@ struct CareerCard: View {
         title: "Програміст",
         description: "Створює додатки та веб-сайти",
         icon: "laptopcomputer",
-        color: .blue
+        color: .blue,
+        category: .technology
     ),
     isFavorite: false,
     onFavoriteTap: {}
@@ -76,7 +77,8 @@ struct CareerCard: View {
             title: "Дизайнер",
             description: "Малює красиві інтерфейси",
             icon: "paintbrush.fill",
-            color: .purple
+            color: .purple,
+            category: .creative
         ),
         isFavorite: true,
         onFavoriteTap: {}
