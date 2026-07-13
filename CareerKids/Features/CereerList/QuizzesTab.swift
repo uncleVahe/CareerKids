@@ -218,8 +218,8 @@ struct QuizzesTab: View {
 /// Картка майбутнього тесту
 struct UpcomingQuizCard: View {
     let icon: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     let color: Color
     let comingSoon: Bool
     
@@ -270,7 +270,7 @@ struct UpcomingQuizCard: View {
 /// Картка статистики
 struct StatCard: View {
     let value: String
-    let label: String
+    let label: LocalizedStringKey
     let icon: String
     let color: Color
     

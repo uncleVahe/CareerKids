@@ -75,7 +75,7 @@ struct OnboardingView: View {
                         viewModel.nextStep()
                     }
                 }) {
-                    Text(viewModel.currentStep == viewModel.totalSteps - 1 ? "Почати!" : "Далі")
+                    Text(viewModel.currentStep == viewModel.totalSteps - 1 ? LocalizedStringKey("Почати!") : LocalizedStringKey("Далі"))
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -100,4 +100,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView(isOnboardingComplete: .constant(false))
+        .environmentObject(LocalizationManager.shared)
 }

@@ -22,7 +22,6 @@ protocol ProfileEditableViewModel: ObservableObject {
 
 // MARK: - Conformance
 
-extension ProfileViewModel: ProfileEditableViewModel {}
 extension ProfileTabViewModel: ProfileEditableViewModel {}
 
 /// Екран редагування профілю
@@ -243,5 +242,5 @@ struct ProfileEditView<ViewModel: ProfileEditableViewModel>: View {
 // MARK: - Preview
 
 #Preview {
-    ProfileEditView(viewModel: ProfileViewModel())
+    ProfileEditView(viewModel: ProfileTabViewModel())
 }

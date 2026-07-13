@@ -9,7 +9,7 @@ import Foundation
 
 protocol UserProfileProviding {
     func getProfile() -> UserProfile
-    func saveProfile(name: String, age: Int)
+    @discardableResult func saveProfile(name: String, age: Int) -> Bool
     func saveProfileImage(_ imageData: Data?)
     func getProfileImage() -> Data?
     func clearProfile()
@@ -57,18 +57,22 @@ final class UserProfileService: UserProfileProviding {
         }
     }
     
-    func saveProfile(name: String, age: Int) {
+    /// - Returns: `false` якщо дані невалідні і нічого не збережено. В Release білді
+    ///   `assertionFailure` — no-op, тому caller мав отримувати мовчазний успіх на невалідних
+    ///   даних; тепер caller (ViewModel) сам вирішує що показати юзеру.
+    @discardableResult
+    func saveProfile(name: String, age: Int) -> Bool {
         guard !name.isEmpty, age > 0 else {
-            assertionFailure("Invalid profile data: name=\(name), age=\(age)")
-            return
+            return false
         }
-        
+
         queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
             self.defaults.set(name, forKey: Keys.userName)
             self.defaults.set(age, forKey: Keys.userAge)
             self.defaults.set(true, forKey: Keys.hasCompletedOnboarding)
         }
+        return true
     }
     
     func clearProfile() {

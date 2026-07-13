@@ -15,17 +15,41 @@ class QuizViewModel: ObservableObject {
     @Published var showResult = false
     @Published var quizResult: QuizResult?
     @Published var isProcessingAnswer = false // Запобігає подвійному натисканню
-    
+
+    private let historyService: TestHistoryManaging
+    private let dataLoader: CareerDataLoading
+
     // Завантажуємо питання з JSON файлу
-    let questions: [QuizQuestion] = DataLoaderService.shared.loadQuizQuestions()
-    
+    let questions: [QuizQuestion]
+
+    /// Task замість вкладених DispatchQueue.asyncAfter — має cancellation,
+    /// тому якщо ViewModel деалокується (юзер вийшов з квізу) під час 0.6с
+    /// анімаційної затримки, перехід до наступного питання просто не відбудеться,
+    /// замість того щоб стріляти в задеалокований/змінений стан.
+    private var advanceTask: Task<Void, Never>?
+
+    init(historyService: TestHistoryManaging = TestHistoryService.shared,
+         dataLoader: CareerDataLoading = DataLoaderService.shared) {
+        self.historyService = historyService
+        self.dataLoader = dataLoader
+        self.questions = dataLoader.loadQuizQuestions()
+    }
+
+    deinit {
+        advanceTask?.cancel()
+    }
+
     var currentQuestion: QuizQuestion? {
         guard currentQuestionIndex < questions.count else { return nil }
         return questions[currentQuestionIndex]
     }
     
     var progress: Double {
-        Double(currentQuestionIndex + 1) / Double(questions.count)
+        // questions.count == 0 (наприклад, дефолтний DataLoaderService провалив завантаження
+        // ще й fallback повернув порожній масив) інакше давав би +inf, а не 0/1 —
+        // ProgressView(value:) з infinite вилітає в SwiftUI шумними warning-ами про layout.
+        guard !questions.isEmpty else { return 0 }
+        return Double(currentQuestionIndex + 1) / Double(questions.count)
     }
     
     var canGoBack: Bool {
@@ -36,17 +60,19 @@ class QuizViewModel: ObservableObject {
         // Запобігаємо подвійному натисканню
         guard !isProcessingAnswer else { return }
         guard let question = currentQuestion else { return }
-        
+
         isProcessingAnswer = true
         selectedAnswers[question.id] = answer
-        
-        // Перехід до наступного питання з затримкою
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+
+        advanceTask?.cancel()
+        advanceTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(300))
+            guard let self, !Task.isCancelled else { return }
             self.nextQuestion()
-            // Дозволяємо нові натискання після анімації
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.isProcessingAnswer = false
-            }
+
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            self.isProcessingAnswer = false
         }
     }
     
@@ -88,12 +114,18 @@ class QuizViewModel: ObservableObject {
         
         // Знаходимо топ категорію
         let topCategory = categoryScores.max(by: { $0.value < $1.value })?.key ?? .technology
-        
-        // Розраховуємо відсотки
-        let totalAnswers = selectedAnswers.count
+
+        // Розраховуємо відсотки відносно кількості "голосів" за категорії, а не
+        // кількості відповідей: одна відповідь може голосувати за 2+ категорії одразу
+        // (див. фолбек-дані: careerCategories: [.creative, .art]), а custom-відповіді
+        // не голосують взагалі. Ділення на selectedAnswers.count (як було) робило так,
+        // що percentages по категоріях не сумувались у 100% — знайдено юніт-тестом.
+        let totalVotes = categoryScores.values.reduce(0, +)
         var percentages: [CareerCategory: Int] = [:]
-        for (category, score) in categoryScores {
-            percentages[category] = (score * 100) / totalAnswers
+        if totalVotes > 0 {
+            for (category, score) in categoryScores {
+                percentages[category] = (score * 100) / totalVotes
+            }
         }
         
         // Рекомендовані професії
@@ -114,18 +146,14 @@ class QuizViewModel: ObservableObject {
         }
     }
     
-    /// Зберігає статистику тесту в профіль користувача
+    /// Зберігає результат тесту в історію.
+    /// Раніше тут ще дублювались лічильник "testsCompleted" і "lastTopCategory" напряму
+    /// в UserDefaults.standard — жива екранна логіка (ProfileTabViewModel) їх не читає,
+    /// вона вже рахує все з historyService.getHistory(), тому ці два write були мертвим кодом
+    /// і другим джерелом правди на той самий стан. Прибрано.
     private func saveTestStatistics(topCategory: CareerCategory) {
-        // Збільшуємо лічильник пройдених тестів
-        let currentCount = UserDefaults.standard.integer(forKey: "testsCompleted")
-        UserDefaults.standard.set(currentCount + 1, forKey: "testsCompleted")
-        
-        // Зберігаємо топ категорію
-        UserDefaults.standard.set(topCategory.rawValue, forKey: "lastTopCategory")
-        
-        // Зберігаємо результат в історію тестів
         if let result = quizResult {
-            TestHistoryService.shared.saveTest(result: result)
+            historyService.saveTest(result: result)
         }
     }
     

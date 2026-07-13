@@ -243,17 +243,20 @@ class CareersTabViewModel: ObservableObject {
     @Published var shouldShowQuizPromo = true
     
     // MARK: - Services
-    
-    private let dataLoader = DataLoaderService.shared
-    private let favoritesService = FavoritesService.shared
-    
+
+    private let dataLoader: CareerDataLoading
+    private let favoritesService: FavoritesManaging
+
     // MARK: - Lifecycle
-    
-    init() {
+
+    init(dataLoader: CareerDataLoading = DataLoaderService.shared,
+         favoritesService: FavoritesManaging = FavoritesService.shared,
+         historyService: TestHistoryManaging = TestHistoryService.shared) {
+        self.dataLoader = dataLoader
+        self.favoritesService = favoritesService
+
         // Перевіряємо чи користувач вже проходив тест
-        if let _ = UserDefaults.standard.array(forKey: "TestHistory") {
-            shouldShowQuizPromo = false
-        }
+        shouldShowQuizPromo = historyService.getHistory().isEmpty
     }
     
     // MARK: - Methods

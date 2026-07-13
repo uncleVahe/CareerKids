@@ -13,9 +13,11 @@ import PhotosUI
 struct ProfileTab: View {
     
     // MARK: - State
-    
+
     @StateObject private var viewModel = ProfileTabViewModel()
+    @EnvironmentObject private var localization: LocalizationManager
     @State private var showEditProfile = false
+    @State private var showLanguagePicker = false
     
     // MARK: - Body
     
@@ -47,6 +49,17 @@ struct ProfileTab: View {
             .navigationTitle("Профіль")
             .sheet(isPresented: $showEditProfile) {
                 ProfileEditView(viewModel: viewModel)
+            }
+            .sheet(isPresented: $showLanguagePicker) {
+                LanguagePickerSheet(
+                    current: localization.currentLanguage,
+                    onSelect: { language in
+                        localization.setLanguage(language)
+                        showLanguagePicker = false
+                    }
+                )
+                .presentationDetents([.height(220)])
+                .presentationDragIndicator(.visible)
             }
             .onAppear {
                 viewModel.loadProfile()
@@ -237,10 +250,10 @@ struct ProfileTab: View {
                     icon: "globe",
                     title: "Мова",
                     color: .blue,
-                    subtitle: "Українська",
+                    subtitle: LocalizedStringKey(localization.currentLanguage.displayName),
                     showChevron: true
                 ) {
-                    // TODO: Language settings
+                    showLanguagePicker = true
                 }
                 
                 Divider()
@@ -321,7 +334,7 @@ struct ProfileTab: View {
 struct QuickStatCard: View {
     let icon: String
     let value: String
-    let label: String
+    let label: LocalizedStringKey
     let color: Color
     
     var body: some View {
@@ -348,8 +361,8 @@ struct QuickStatCard: View {
 /// Значок досягнення
 struct AchievementBadge: View {
     let icon: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     let isUnlocked: Bool
     let color: Color
     
@@ -383,12 +396,48 @@ struct AchievementBadge: View {
     }
 }
 
+/// Sheet-пікер мови застосунку
+struct LanguagePickerSheet: View {
+    let current: LocalizationManager.Language
+    let onSelect: (LocalizationManager.Language) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List(LocalizationManager.Language.allCases) { language in
+                Button {
+                    onSelect(language)
+                } label: {
+                    HStack {
+                        Text(language.displayName)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        if language == current {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("Оберіть мову")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Скасувати") { dismiss() }
+                }
+            }
+        }
+    }
+}
+
 /// Рядок налаштувань
 struct SettingsRow: View {
     let icon: String
-    let title: String
+    let title: LocalizedStringKey
     let color: Color
-    var subtitle: String?
+    var subtitle: LocalizedStringKey?
     var showChevron: Bool = false
     let action: () -> Void
     
@@ -451,11 +500,21 @@ class ProfileTabViewModel: ObservableObject {
     }
     
     // MARK: - Services
-    
-    private let userProfileService = UserProfileService.shared
-    private let favoritesService = FavoritesService.shared
-    private let historyService = TestHistoryService.shared
-    
+
+    private let userProfileService: UserProfileProviding
+    private let favoritesService: FavoritesManaging
+    private let historyService: TestHistoryManaging
+
+    // MARK: - Init
+
+    init(userProfileService: UserProfileProviding = UserProfileService.shared,
+         favoritesService: FavoritesManaging = FavoritesService.shared,
+         historyService: TestHistoryManaging = TestHistoryService.shared) {
+        self.userProfileService = userProfileService
+        self.favoritesService = favoritesService
+        self.historyService = historyService
+    }
+
     // MARK: - Methods
     
     func loadProfile() {
@@ -500,4 +559,5 @@ class ProfileTabViewModel: ObservableObject {
 
 #Preview {
     ProfileTab()
+        .environmentObject(LocalizationManager.shared)
 }

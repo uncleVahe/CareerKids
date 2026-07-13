@@ -7,21 +7,32 @@
 
 import Foundation
 
+/// Абстракція над TestHistoryService для DI/тестів — інжектуй мок замість .shared у ViewModel-ах
+protocol TestHistoryManaging {
+    func saveTest(result: QuizResult)
+    func getHistory() -> [TestHistoryRecord]
+    func deleteTest(id: String)
+    func clearAll()
+    func getLastTest() -> TestHistoryRecord?
+    func getTestCount() -> Int
+    func getTests(for category: CareerCategory) -> [TestHistoryRecord]
+}
+
 /// Сервіс для роботи з історією пройдених тестів
-final class TestHistoryService {
-    
+final class TestHistoryService: TestHistoryManaging {
+
     // MARK: - Singleton
-    
+
     static let shared = TestHistoryService()
-    
+
     // MARK: - Private Properties
-    
+
     private let storageKey = "TestHistory"
     private let defaults: UserDefaults
-    
+
     // MARK: - Init
-    
-    private init(defaults: UserDefaults = .standard) {
+
+    init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
     

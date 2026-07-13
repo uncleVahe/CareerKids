@@ -8,17 +8,26 @@
 import Foundation
 import SwiftUI
 
+/// Абстракція над DataLoaderService для DI/тестів.
+/// Важливо: Bundle.main всередині XCTest-таргету — це бандл test runner-а, не апки,
+/// тому без цього протоколу ViewModel в unit-тестах завжди отримує fallback-дані,
+/// а не те, що ти явно підставив у мок.
+protocol CareerDataLoading {
+    func loadCareers() -> [Career]
+    func loadQuizQuestions() -> [QuizQuestion]
+}
+
 /// Сервіс для завантаження даних з JSON файлів
 /// Відповідає за парсинг та надання даних про професії та питання тестів
-class DataLoaderService {
-    
+class DataLoaderService: CareerDataLoading {
+
     // MARK: - Singleton
-    
+
     static let shared = DataLoaderService()
-    
-    // MARK: - Private Init
-    
-    private init() {}
+
+    // MARK: - Init
+
+    init() {}
     
     // MARK: - Career Loading
     

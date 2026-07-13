@@ -29,7 +29,7 @@ final class FavoritesService: FavoritesManaging {
     
     private var _favoriteIds: Set<String> = []
     
-    private init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         loadFavorites()
     }
@@ -82,7 +82,7 @@ final class FavoritesService: FavoritesManaging {
         queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
             self._favoriteIds.remove(careerId)
-            self.defaults.set(Array(self._favoriteIds), forKey: self.favoritesKey)
+            self.saveFavorites() // було: дублювало persist-логіку і не постило .favoritesDidChange
         }
     }
     

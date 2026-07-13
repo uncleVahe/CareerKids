@@ -13,9 +13,15 @@ class OnboardingViewModel: ObservableObject {
     @Published var currentStep: Int = 0
     @Published var userName: String = ""
     @Published var userAge: Int = 10
-    
+
     let totalSteps = 4
-    
+
+    private let profileService: UserProfileProviding
+
+    init(profileService: UserProfileProviding = UserProfileService.shared) {
+        self.profileService = profileService
+    }
+
     var canProceed: Bool {
         switch currentStep {
         case 1: return !userName.isEmpty && userName.count >= 2
@@ -40,7 +46,8 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    func completeOnboarding() {
-        UserProfileService.shared.saveProfile(name: userName, age: userAge)
+    @discardableResult
+    func completeOnboarding() -> Bool {
+        profileService.saveProfile(name: userName, age: userAge)
     }
 }

@@ -103,8 +103,8 @@ struct CareerDetailView: View {
 // InfoRow component
 struct InfoRow: View {
     let icon: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     let color: Color
     
     var body: some View {

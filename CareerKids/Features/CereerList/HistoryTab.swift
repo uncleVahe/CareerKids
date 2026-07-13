@@ -213,7 +213,7 @@ struct HistoryTab: View {
 struct StatBox: View {
     let icon: String
     let value: String
-    let label: String
+    let label: LocalizedStringKey
     let color: Color
     
     var body: some View {
